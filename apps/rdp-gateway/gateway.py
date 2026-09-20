@@ -32,7 +32,9 @@ def connection_data() -> str:
 
 async def proxy(request: web.Request) -> web.StreamResponse:
     if request.path == "/" and "data" not in request.query:
-        raise web.HTTPFound("/?" + urlencode({"data": connection_data()}))
+        # Keep the redirect relative so Home Assistant Ingress retains its
+        # app-specific URL prefix instead of navigating to the HA dashboard.
+        raise web.HTTPFound("?" + urlencode({"data": connection_data()}))
     headers = {key: value for key, value in request.headers.items() if key.lower() not in {"host", "cookie"}}
     async with request.app["client"].request(request.method, f"{UPSTREAM}{request.rel_url}", headers=headers, data=request.content, allow_redirects=False) as upstream:
         response = web.StreamResponse(status=upstream.status, headers={key: value for key, value in upstream.headers.items() if key.lower() not in {"content-length", "transfer-encoding", "connection", "set-cookie"}})
