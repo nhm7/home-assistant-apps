@@ -1,5 +1,6 @@
 FROM guacamole/guacd:1.6.0 AS guacd
 FROM guacamole/guacamole:1.6.0
+USER root
 ARG GUACAMOLE_VERSION=1.6.0
 COPY --from=guacd /opt/guacamole /opt/guacamole
 RUN apt-get update && apt-get install -y --no-install-recommends curl python3 python3-aiohttp && rm -rf /var/lib/apt/lists/* \

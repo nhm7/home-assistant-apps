@@ -12,18 +12,16 @@ ingress: true
 ingress_port: 8081
 panel_icon: mdi:remote-desktop
 panel_title: RDP Gateway
-panel_admin: false
+panel_admin: true
 options:
   rdp_host: ""
   rdp_port: 3389
   rdp_username: ""
   rdp_password: ""
   rdp_domain: ""
-  gateway_secret: ""
 schema:
   rdp_host: str
   rdp_port: port
   rdp_username: str
   rdp_password: password
   rdp_domain: str?
-  gateway_secret: password
