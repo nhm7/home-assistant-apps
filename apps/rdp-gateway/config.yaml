@@ -9,7 +9,7 @@ arch:
 startup: services
 boot: auto
 ingress: true
-ingress_port: 8080
+ingress_port: 8081
 panel_icon: mdi:remote-desktop
 panel_title: RDP Gateway
 panel_admin: false

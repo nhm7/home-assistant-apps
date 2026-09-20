@@ -4,7 +4,7 @@ from aiohttp import web, ClientSession
 
 OPTIONS = json.load(open("/data/options.json", encoding="utf-8"))
 SECRET = OPTIONS["gateway_secret"].encode()
-UPSTREAM = "http://127.0.0.1:8081/guacamole"
+UPSTREAM = "http://127.0.0.1:8080/guacamole"
 
 def configure():
     rdp = OPTIONS
@@ -43,4 +43,4 @@ async def start(app): app["client"] = ClientSession()
 async def stop(app): await app["client"].close()
 if "--configure" in sys.argv: configure(); raise SystemExit(0)
 app = web.Application(); app.router.add_get("/launch", launch); app.router.add_route("*", "/{path:.*}", proxy); app.on_startup.append(start); app.on_cleanup.append(stop)
-web.run_app(app, port=8080)
+web.run_app(app, port=8081)
