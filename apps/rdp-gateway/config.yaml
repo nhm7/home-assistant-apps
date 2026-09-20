@@ -1,0 +1,29 @@
+name: RDP Gateway
+slug: rdp_gateway
+description: Browser-based RDP access through Apache Guacamole
+version: 0.1.0
+arch:
+  - aarch64
+  - amd64
+  - armv7
+startup: services
+boot: auto
+ingress: true
+ingress_port: 8080
+panel_icon: mdi:remote-desktop
+panel_title: RDP Gateway
+panel_admin: false
+options:
+  rdp_host: ""
+  rdp_port: 3389
+  rdp_username: ""
+  rdp_password: ""
+  rdp_domain: ""
+  gateway_secret: ""
+schema:
+  rdp_host: str
+  rdp_port: port
+  rdp_username: str
+  rdp_password: password
+  rdp_domain: str?
+  gateway_secret: password
