@@ -1,20 +1,17 @@
 # RDP Gateway App
 
-Diese App bündelt Apache Guacamole als HTML5-RDP-Gateway. Sie wird nicht
-direkt veröffentlicht: Der Zugriff erfolgt über die mitgelieferte
-`rdp_gateway`-Custom-Integration, welche die Home-Assistant-Nutzerrechte vor
-dem Ausstellen einer Sitzung prüft.
+This app bundles Apache Guacamole as an HTML5 RDP gateway. Access is provided
+through the companion `rdp_gateway` custom integration, which checks Home
+Assistant user permissions before issuing a session.
 
-## Sicherheit
+## Security
 
-- `rdp_password` und `gateway_secret` sind Passwortfelder und dürfen nie in
-  Logs, Commits oder URLs erscheinen.
-- Der `gateway_secret` muss identisch in App und Integration hinterlegt sein.
-- RDP-Port 3389 nur zwischen App und Zielmaschine freischalten – niemals
-  ins Internet weiterleiten.
-- Das App-Panel bleibt administrativ verborgen. Die normale Nutzung erfolgt
-  über das Integration-Panel, das `admins_only` serverseitig durchsetzt.
+- `rdp_password` and `gateway_secret` are password fields. Never expose them
+  in logs, commits, or URLs.
+- The `gateway_secret` must be identical in the app and integration settings.
+- Permit RDP port 3389 only between the app and target machine; never expose it
+  directly to the internet.
+- The integration panel enforces `admins_only` server-side.
 
-Die Laufzeit-Konfiguration von Guacamole und die signierte Sitzungsübergabe
-sind in dieser ersten Struktur bewusst noch nicht aktiviert; ohne diese beiden
-Bausteine darf die App nicht produktiv installiert werden.
+The app generates Guacamole's RDP connection configuration at startup and uses
+a short-lived signed session issued by Home Assistant.

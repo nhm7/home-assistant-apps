@@ -1,15 +1,15 @@
 # Home Assistant Apps
 
-Eine Sammlung eigenständiger Home-Assistant-Apps und zugehöriger Custom
-Integrations. Jede App lebt in einem eigenen Verzeichnis unter `apps/`
-und kann unabhängig versioniert und veröffentlicht werden.
+An independent collection of Home Assistant apps and companion custom
+integrations. Each app lives in its own directory under `apps/` and can be
+versioned and released independently.
 
-## Enthaltene Apps
+## Included apps
 
-| App | Zweck |
+| App | Purpose |
 | --- | --- |
-| [`rdp-gateway`](apps/rdp-gateway) | Browser-basierter, in Home Assistant eingebetteter RDP-Zugriff |
+| [`rdp-gateway`](apps/rdp-gateway) | Browser-based RDP access embedded in Home Assistant |
 
-Die optionale Custom Integration liegt unter `custom_components/rdp_gateway`.
-Sie wird den Sidebar-Eintrag und die Zugriffsregel auf Basis des angemeldeten
-Home-Assistant-Nutzers bereitstellen.
+The optional custom integration is located in `custom_components/rdp_gateway`.
+It provides the sidebar entry and access control based on the signed-in Home
+Assistant user.
