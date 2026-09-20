@@ -1,7 +1,7 @@
 name: RDP Gateway
 slug: rdp_gateway
 description: Browser-based RDP access through Apache Guacamole
-version: 0.1.3
+version: 0.1.4
 arch:
   - aarch64
   - amd64
