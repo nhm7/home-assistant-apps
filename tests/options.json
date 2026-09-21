@@ -1,1 +1,1 @@
-{"rdp_host":"127.0.0.1","rdp_port":3389,"rdp_username":"test","rdp_password":"test-only","rdp_domain":""}
+{"rdp_host":"127.0.0.1","rdp_port":3389,"rdp_username":"test","rdp_password":"test-only","rdp_domain":"","rdp_security":"any","rdp_ignore_cert":false}

@@ -13,6 +13,7 @@ from urllib.parse import urlencode
 from xml.sax.saxutils import escape
 
 from aiohttp import ClientSession, ClientTimeout, WSMsgType, web
+from rdp_config import connection_parameters
 
 OPTIONS = json.load(open("/data/options.json", encoding="utf-8"))
 UPSTREAM = "http://127.0.0.1:8080/guacamole"
@@ -29,7 +30,7 @@ def configure() -> None:
 
 def connection_data() -> str:
     JSON_KEY = KEY_PATH.read_text()
-    parameters = {"hostname": OPTIONS["rdp_host"], "port": str(OPTIONS["rdp_port"]), "username": OPTIONS["rdp_username"], "password": OPTIONS["rdp_password"], "domain": OPTIONS.get("rdp_domain", "")}
+    parameters = connection_parameters(OPTIONS)
     # The JSON extension's connection schema has no ``name`` field; the map
     # key is used as the connection identifier/display name by Guacamole.
     payload = json.dumps({"username": "home-assistant", "expires": int((__import__("time").time() + 60) * 1000), "connections": {"rdp": {"protocol": "rdp", "parameters": parameters}}}, separators=(",", ":")).encode()
@@ -97,4 +98,5 @@ app = web.Application()
 app.router.add_route("*", "/{path:.*}", proxy)
 app.on_startup.append(start)
 app.on_cleanup.append(stop)
-web.run_app(app, port=8081)
+if __name__ == "__main__":
+    web.run_app(app, port=8081)

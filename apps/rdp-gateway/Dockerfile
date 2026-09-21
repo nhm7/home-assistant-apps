@@ -12,6 +12,7 @@ RUN apk add --no-cache bash curl openssl openjdk17-jre py3-aiohttp python3 tar \
 COPY --from=client /opt/guacamole/webapp/guacamole.war /opt/tomcat/webapps/guacamole.war
 COPY run.sh /run.sh
 COPY gateway.py /gateway.py
+COPY rdp_config.py /rdp_config.py
 RUN chmod +x /run.sh
 CMD ["/run.sh"]
 ENTRYPOINT []

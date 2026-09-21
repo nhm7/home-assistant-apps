@@ -1,7 +1,7 @@
 name: RDP Gateway
 slug: rdp_gateway
 description: Browser-based RDP access through Apache Guacamole
-version: 0.1.8
+version: 0.1.9
 arch:
   - aarch64
   - amd64
@@ -18,9 +18,13 @@ options:
   rdp_username: ""
   rdp_password: ""
   rdp_domain: ""
+  rdp_security: any
+  rdp_ignore_cert: false
 schema:
   rdp_host: str
   rdp_port: port
   rdp_username: str
   rdp_password: password
   rdp_domain: str?
+  rdp_security: list(any|nla|tls|rdp)
+  rdp_ignore_cert: bool
