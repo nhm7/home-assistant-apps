@@ -73,12 +73,56 @@ async def proxy(request: web.Request) -> web.StreamResponse:
         body = {"data": await asyncio.to_thread(connection_data)}
         headers.pop("Content-Type", None)
     async with request.app["client"].request(request.method, target, headers=headers, data=body, allow_redirects=False) as upstream:
-        response = web.StreamResponse(status=upstream.status, headers={key: value for key, value in upstream.headers.items() if key.lower() not in {"content-length", "transfer-encoding", "connection", "set-cookie"}})
+        content_type = upstream.headers.get("Content-Type", "")
+        is_html = "text/html" in content_type
+        # Strip Content-Length: injecting the focus script changes the body size.
+        skip_headers = {"content-length", "transfer-encoding", "connection", "set-cookie"}
+        response = web.StreamResponse(status=upstream.status, headers={key: value for key, value in upstream.headers.items() if key.lower() not in skip_headers})
         for cookie in upstream.headers.getall("Set-Cookie", []):
             response.headers.add("Set-Cookie", cookie.replace("Path=/guacamole", "Path=/"))
         await response.prepare(request)
-        async for chunk in upstream.content.iter_chunked(65536):
-            await response.write(chunk)
+        if is_html:
+            # Collect the full HTML so we can inject the keyboard-focus script.
+            body_bytes = await upstream.content.read()
+            html = body_bytes.decode("utf-8", errors="replace")
+            # Inject just before </body>: requests window focus on load, on every
+            # click/pointerdown, and when the HA parent pings via postMessage.
+            # This fixes keyboard input loss when Guacamole runs inside the HA
+            # Ingress iframe, where the parent frame holds focus by default.
+            FOCUS_SCRIPT = (
+                "<script>"
+                "(function(){"
+                "function grab(){try{window.focus();}catch(e){}}"
+                # Grab focus immediately when the page loads.
+                "grab();"
+                # Grab on any click or touch inside the frame.
+                "document.addEventListener('click',grab,true);"
+                "document.addEventListener('pointerdown',grab,true);"
+                # Grab when the mouse re-enters the Guacamole area after the
+                # user clicked somewhere outside (e.g. the HA sidebar).
+                # mouseenter fires on a user gesture, so window.focus() is
+                # allowed by the browser without a click.
+                "document.addEventListener('mouseenter',grab,true);"
+                # Grab when the user switches back to this tab.
+                "document.addEventListener('visibilitychange',function(){"
+                "  if(!document.hidden){grab();}"
+                "});"
+                # postMessage hook for future HA-side integration.
+                "window.addEventListener('message',function(e){"
+                "  if(e.data&&e.data.type==='guac-focus'){grab();}"
+                "});"
+                "})();"
+                "</script>"
+            )
+            close_body = html.rfind("</body>")
+            if close_body != -1:
+                html = html[:close_body] + FOCUS_SCRIPT + html[close_body:]
+            else:
+                html += FOCUS_SCRIPT
+            await response.write(html.encode("utf-8"))
+        else:
+            async for chunk in upstream.content.iter_chunked(65536):
+                await response.write(chunk)
         return response
 
 

@@ -24,5 +24,9 @@ COPY run.sh /run.sh
 COPY gateway.py /gateway.py
 COPY rdp_config.py /rdp_config.py
 RUN chmod +x /run.sh
+# The guacd base image checks every five minutes.  Supervisor waits for a
+# healthy app before exposing ingress, so that inherited interval makes a
+# freshly started app appear unavailable for up to five minutes.
+HEALTHCHECK --interval=5s --timeout=5s --start-period=10s --retries=12 CMD nc -z 127.0.0.1 4822 && curl --silent --fail --max-time 3 http://127.0.0.1:8081/ >/dev/null || exit 1
 CMD ["/run.sh"]
 ENTRYPOINT []

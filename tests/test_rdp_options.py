@@ -49,6 +49,11 @@ def test_defaults_negotiate_and_validate_certificates():
     assert params["ignore-cert"] == "false"
 
 
+def test_healthcheck_does_not_inherit_five_minute_probe_interval():
+    dockerfile = (Path(__file__).parents[1] / "apps" / "rdp-gateway" / "Dockerfile").read_text(encoding="utf-8")
+    assert "HEALTHCHECK --interval=5s --timeout=5s --start-period=10s --retries=12 CMD nc -z 127.0.0.1 4822 && curl --silent --fail --max-time 3 http://127.0.0.1:8081/" in dockerfile
+
+
 def test_all_security_modes_and_explicit_certificate_opt_out():
     base = {"rdp_host": "host", "rdp_port": 3389, "rdp_username": "u", "rdp_password": "p"}
     for mode in ("any", "nla", "tls", "rdp"):
@@ -76,6 +81,7 @@ def test_invalid_options_fail_closed():
 if __name__ == "__main__":
     test_english_translation_covers_every_schema_option()
     test_defaults_negotiate_and_validate_certificates()
+    test_healthcheck_does_not_inherit_five_minute_probe_interval()
     test_all_security_modes_and_explicit_certificate_opt_out()
     test_invalid_options_fail_closed()
     print("PASS: RDP option mapping regression tests")

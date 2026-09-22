@@ -13,7 +13,7 @@ For a running image, mount a test options file and run the HTTP smoke test:
 docker run --rm --detach --name rdp-gateway \
   --publish 18081:8081 \
   --volume "$PWD/tests/options.json:/data/options.json:ro" \
-  ghcr.io/nhm7/amd64-rdp-gateway:0.1.10
+  ghcr.io/nhm7/amd64-rdp-gateway:0.1.12
 python3 tests/smoke.py http://127.0.0.1:18081
 docker rm --force rdp-gateway
 ```
@@ -32,7 +32,7 @@ sudo docker run -d --name xrdp-fixture --network rdp-fixture-net local/xrdp-fixt
 sudo docker run --rm --name rdp-gateway-fixture --network rdp-fixture-net \
   --publish 127.0.0.1:18084:8081 \
   --volume "$PWD/tests/options-xrdp-fixture.json:/data/options.json:ro" \
-  local/rdp-gateway:0.1.10
+  local/rdp-gateway:0.1.12
 ```
 
 In another terminal, run the smoke test and WebSocket probe:
