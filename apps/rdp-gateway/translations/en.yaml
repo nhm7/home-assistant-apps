@@ -1,0 +1,22 @@
+configuration:
+  rdp_host:
+    name: RDP server address
+    description: Hostname or IP address of the Windows or RDP server to connect to.
+  rdp_port:
+    name: RDP server port
+    description: TCP port of the RDP server. The standard RDP port is 3389.
+  rdp_username:
+    name: RDP username
+    description: Username used to sign in to the remote desktop.
+  rdp_password:
+    name: RDP password
+    description: Password used to sign in to the remote desktop.
+  rdp_domain:
+    name: Windows domain
+    description: Optional Windows or Active Directory domain for the RDP username.
+  rdp_security:
+    name: RDP security mode
+    description: Security protocol to negotiate with the RDP server. Any is recommended; NLA, TLS, and RDP force a specific mode.
+  rdp_ignore_cert:
+    name: Ignore the RDP certificate
+    description: Allow connections when the server certificate cannot be validated. Enable only when you trust the server and understand the security risk.
